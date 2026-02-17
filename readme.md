@@ -260,3 +260,4 @@ class UserService(
 5. [Spring Data JPA @Query](https://www.baeldung.com/spring-data-jpa-query)
 6. [Spring Data H2](https://www.baeldung.com/spring-boot-h2-database)
 7. [Spring API versioning](https://spring.io/blog/2025/09/16/api-versioning-in-spring)
+8. [Spring API versioning again](https://www.baeldung.com/spring-api-versioning#whats-new-in-spring-framework-7-amp-boot-4)
