@@ -271,14 +271,14 @@ components:
           type: string
           minLength: 1
           example: Petrov
-        active:
+        isActive:
           type: boolean
           default: true
           example: true
 
     UserUpdateRequest:
       type: object
-      required: [email, firstName, lastName, active]
+      required: [email, firstName, lastName, isActive]
       properties:
         email:
           type: string
@@ -289,12 +289,12 @@ components:
         lastName:
           type: string
           minLength: 1
-        active:
+        isActive:
           type: boolean
 
     UserResponse:
       type: object
-      required: [id, email, firstName, lastName, active]
+      required: [id, email, firstName, lastName, isActive]
       properties:
         id:
           type: integer
@@ -306,7 +306,7 @@ components:
           type: string
         lastName:
           type: string
-        active:
+        isActive:
           type: boolean
 
     DishCreateRequest:

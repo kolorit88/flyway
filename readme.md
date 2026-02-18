@@ -13,7 +13,7 @@
 ---
 
 ## Что нужно сдать
-Ссылку на PR в ваш репозиторий (созданный через из этого шаблона).
+Ссылку на PR в ваш репозиторий (созданный через этот шаблон).
 
 ---
 
@@ -162,7 +162,7 @@ class UserService(
                 email = cmd.email,
                 firstName = cmd.firstName,
                 lastName = cmd.lastName,
-                active = true
+                isActive = true
             )
         )
     }
@@ -188,7 +188,7 @@ class UserService(
 2. `email: String`
 3. `firstName: String`
 4. `lastName: String`
-5. `active: Boolean`
+5. `isActive: Boolean`
 
 #### `Dish`
 1. `id: Long`

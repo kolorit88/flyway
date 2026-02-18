@@ -78,8 +78,8 @@ SUFFIX="$(date +%s)-$$"
 USER_EMAIL="ci-user-${SUFFIX}@example.com"
 DISH_NAME="CI-Dish-${SUFFIX}"
 
-USER_CREATE_PAYLOAD="{\"email\":\"${USER_EMAIL}\",\"firstName\":\"Ivan\",\"lastName\":\"Petrov\",\"active\":true}"
-USER_UPDATE_PAYLOAD="{\"email\":\"${USER_EMAIL}\",\"firstName\":\"IvanUpdated\",\"lastName\":\"PetrovUpdated\",\"active\":false}"
+USER_CREATE_PAYLOAD="{\"email\":\"${USER_EMAIL}\",\"firstName\":\"Ivan\",\"lastName\":\"Petrov\",\"isActive\":true}"
+USER_UPDATE_PAYLOAD="{\"email\":\"${USER_EMAIL}\",\"firstName\":\"IvanUpdated\",\"lastName\":\"PetrovUpdated\",\"isActive\":false}"
 
 DISH_CREATE_PAYLOAD="{\"name\":\"${DISH_NAME}\",\"description\":\"CI test dish\",\"price\":499.0,\"isAvailable\":true}"
 DISH_UPDATE_PAYLOAD="{\"name\":\"${DISH_NAME}-Updated\",\"description\":\"Updated CI dish\",\"price\":799.0,\"isAvailable\":false}"
@@ -152,7 +152,7 @@ call_api "PUT" "/api/v1/users/$USER_ID" "$USER_UPDATE_PAYLOAD"
 assert_status "200"
 UPDATED_FIRST_NAME=$(echo "$API_BODY" | jq -r '.firstName')
 UPDATED_LAST_NAME=$(echo "$API_BODY" | jq -r '.lastName')
-UPDATED_ACTIVE=$(echo "$API_BODY" | jq -r '.active')
+UPDATED_ACTIVE=$(echo "$API_BODY" | jq -r '.isActive')
 if [ "$UPDATED_FIRST_NAME" != "IvanUpdated" ] || [ "$UPDATED_LAST_NAME" != "PetrovUpdated" ] || [ "$UPDATED_ACTIVE" != "false" ]; then
     echo -e "${RED}FAIL${NC}"
     echo "  Не применилось обновление пользователя"
