@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
     "application.service",
     "infrastructure.adapter.persistence",
     "shared.utils.mapper",
+    "infrastructure.exception"
 ])
 class App
 
