@@ -1,6 +1,6 @@
-package application.dto.requests
+package org.example.example.infrastructure.dto.requests.user
 
-data class UserData(
+data class UserUpdateRequest(
     val email: String,
     val firstName: String,
     val lastName: String,

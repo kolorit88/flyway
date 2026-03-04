@@ -1,10 +1,12 @@
 package domain.service
 
-import application.dto.requests.UserData
 import domain.model.User
 
 interface UserService {
-    fun getUserById(userId: Long): User?
+    fun getUserById(userId: Long): User
     fun getAllUsers(): List<User>
-    fun createUser(user: User): User
+    fun createOrGetUser(user: User): Pair<User, Boolean> // пользователь, True: был создан False: получен из репозитория
+    fun findByEmail(email: String): User?
+    fun updateUser(user: User): User
+    fun deleteUserById(userId: Long) : Boolean
 }
