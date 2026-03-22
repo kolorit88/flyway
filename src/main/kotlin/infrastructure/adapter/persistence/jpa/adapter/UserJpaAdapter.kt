@@ -43,16 +43,11 @@ class UserJpaAdapter(
     override fun deleteById(id: Long): Boolean {
         return if (userJpaRepository.existsById(id)) {
             val userOrders = orderJpaRepository.findAllByUserId(id)
-
-            if (userOrders.isEmpty()) {
-                userJpaRepository.deleteById(id)
-                true
-            } else {
-                val userEntity = userJpaRepository.findById(id).get()
-                val inactiveUser = userEntity.copy(isActive = false)
-                userJpaRepository.save(inactiveUser)
-                true
+            if (userOrders.isNotEmpty()) {
+                orderJpaRepository.deleteAll(userOrders)
             }
+            userJpaRepository.deleteById(id)
+            true
         } else {
             false
         }

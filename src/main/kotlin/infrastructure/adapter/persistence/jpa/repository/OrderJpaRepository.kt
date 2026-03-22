@@ -5,6 +5,7 @@ import infrastructure.adapter.persistence.jpa.entity.OrderEntity
 import org.example.example.domain.model.OrderStatus
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
@@ -27,4 +28,8 @@ interface OrderJpaRepository : JpaRepository<OrderEntity, Long> {
     @Query("SELECT DISTINCT o FROM OrderEntity o JOIN o.dishes d WHERE d.id = :dishId")
     @EntityGraph(attributePaths = ["dishes", "user"])
     fun findAllByDishId(@Param("dishId") dishId: Long): List<OrderEntity>
+
+    @Modifying
+    @Query("DELETE FROM OrderEntity o WHERE o.user.id = :userId")
+    fun deleteAllByUserId(@Param("userId") userId: Long)
 }
