@@ -1,7 +1,8 @@
 package infrastructure.adapter.persistence.jpa.repository
 
-import infrastructure.adapter.persistence.jpa.entity.OrderStatus
+
 import infrastructure.adapter.persistence.jpa.entity.OrderEntity
+import org.example.example.domain.model.OrderStatus
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository

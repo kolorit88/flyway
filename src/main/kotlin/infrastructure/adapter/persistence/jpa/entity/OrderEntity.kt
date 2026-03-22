@@ -2,7 +2,7 @@ package infrastructure.adapter.persistence.jpa.entity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import org.example.example.domain.model.Order
-import org.example.example.domain.model.OrderStatus
+import org.example.example.domain.model.OrderStatus as DomainOrderStatus
 
 @Entity
 @Table(name = "orders")
@@ -13,7 +13,7 @@ data class OrderEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val status: OrderStatus = OrderStatus.PENDING,
+    val status: DomainOrderStatus = DomainOrderStatus.PENDING,
 
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
@@ -32,7 +32,7 @@ data class OrderEntity(
 ) {
     constructor() : this(
         id = null,
-        status = OrderStatus.PENDING,
+        status = DomainOrderStatus.PENDING,
         createdAt = LocalDateTime.now(),
         user = UserEntity(),
         dishes = mutableListOf()

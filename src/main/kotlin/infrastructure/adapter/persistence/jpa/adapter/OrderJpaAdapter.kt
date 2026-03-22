@@ -72,13 +72,11 @@ class OrderJpaAdapter(
     }
 
     override fun findAllByStatus(status: DomainOrderStatus): List<Order> {
-        val entityStatus = convertToEntityStatus(status)
-        return orderJpaRepository.findAllByStatus(entityStatus).map { it.toDomain() }
+        return orderJpaRepository.findAllByStatus(status).map { it.toDomain() }
     }
 
     override fun findAllByUserIdAndStatus(userId: Long, status: DomainOrderStatus): List<Order> {
-        val entityStatus = convertToEntityStatus(status)
-        return orderJpaRepository.findAllByUserIdAndStatus(userId, entityStatus).map { it.toDomain() }
+        return orderJpaRepository.findAllByUserIdAndStatus(userId, status).map { it.toDomain() }
     }
 
     private fun convertToEntityStatus(domainStatus: DomainOrderStatus): OrderStatus {
