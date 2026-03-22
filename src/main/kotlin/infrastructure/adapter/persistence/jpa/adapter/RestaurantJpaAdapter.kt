@@ -6,6 +6,7 @@ import domain.port.RestaurantRepositoryPort
 import infrastructure.adapter.persistence.jpa.repository.RestaurantJpaRepository
 import infrastructure.adapter.persistence.jpa.entity.RestaurantEntity
 import infrastructure.adapter.persistence.jpa.repository.DishJpaRepository
+import infrastructure.adapter.persistence.jpa.repository.OrderJpaRepository
 import jakarta.transaction.Transactional
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
@@ -14,7 +15,8 @@ import org.springframework.stereotype.Repository
 @Profile("db")
 class RestaurantJpaAdapter(
     private val restaurantJpaRepository: RestaurantJpaRepository,
-    private val dishJpaRepository: DishJpaRepository
+    private val dishJpaRepository: DishJpaRepository,
+    private val orderJpaRepository: OrderJpaRepository
 ) : RestaurantRepositoryPort {
 
     override fun findAll(): List<Restaurant> {
@@ -44,10 +46,28 @@ class RestaurantJpaAdapter(
     override fun deleteById(id: Long): Boolean {
         return if (restaurantJpaRepository.existsById(id)) {
             val dishes = dishJpaRepository.findAllByRestaurantId(id)
-            dishJpaRepository.deleteAll(dishes)
 
-            restaurantJpaRepository.deleteById(id)
-            true
+            if (dishes.isNotEmpty()) {
+                var hasOrders = false
+                for (dish in dishes) {
+                    val ordersWithDish = orderJpaRepository.findAllByDishId(dish.id!!)
+                    if (ordersWithDish.isNotEmpty()) {
+                        hasOrders = true
+                        break
+                    }
+                }
+
+                if (hasOrders) {
+                    return false
+                } else {
+                    dishJpaRepository.deleteAll(dishes)
+                    restaurantJpaRepository.deleteById(id)
+                    true
+                }
+            } else {
+                restaurantJpaRepository.deleteById(id)
+                true
+            }
         } else {
             false
         }
