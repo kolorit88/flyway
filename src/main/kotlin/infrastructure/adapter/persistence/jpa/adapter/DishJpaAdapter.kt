@@ -6,6 +6,7 @@ import infrastructure.adapter.persistence.jpa.repository.DishJpaRepository
 import infrastructure.adapter.persistence.jpa.entity.DishEntity
 import infrastructure.adapter.persistence.jpa.repository.OrderJpaRepository
 import infrastructure.adapter.persistence.jpa.repository.RestaurantJpaRepository
+import jakarta.transaction.Transactional
 import org.example.example.domain.model.Order
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
@@ -48,15 +49,6 @@ class DishJpaAdapter(
         return savedEntity.toDomain()
     }
 
-    override fun deleteById(id: Long): Boolean {
-        return if (dishJpaRepository.existsById(id)) {
-            dishJpaRepository.deleteById(id)
-            true
-        } else {
-            false
-        }
-    }
-
     override fun findByName(name: String): Dish? {
         return dishJpaRepository.findByName(name)?.toDomain()
     }
@@ -67,5 +59,21 @@ class DishJpaAdapter(
 
     override fun findOrdersContainingDish(dishId: Long): List<Order> {
         return orderJpaRepository.findAllByDishId(dishId).map { it.toDomain() }
+    }
+
+    @Transactional
+    override fun deleteById(id: Long): Boolean {
+        return if (dishJpaRepository.existsById(id)) {
+            val ordersWithDish = orderJpaRepository.findAllByDishId(id)
+            ordersWithDish.forEach { order ->
+                order.dishes.removeIf { it.id == id }
+                orderJpaRepository.save(order)
+            }
+
+            dishJpaRepository.deleteById(id)
+            true
+        } else {
+            false
+        }
     }
 }
