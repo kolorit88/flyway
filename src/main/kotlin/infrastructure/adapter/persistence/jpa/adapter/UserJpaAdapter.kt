@@ -48,7 +48,10 @@ class UserJpaAdapter(
                 userJpaRepository.deleteById(id)
                 true
             } else {
-                throw IllegalStateException("Cannot delete user with id $id because they have existing orders")
+                val userEntity = userJpaRepository.findById(id).get()
+                val inactiveUser = userEntity.copy(isActive = false)
+                userJpaRepository.save(inactiveUser)
+                true
             }
         } else {
             false
@@ -58,4 +61,5 @@ class UserJpaAdapter(
     override fun findByEmail(email: String): User? {
         return userJpaRepository.findByEmail(email)?.toDomain()
     }
+
 }
