@@ -19,7 +19,11 @@ data class UserEntity(
     val lastName: String,
 
     @Column(name = "is_active", nullable = false)
-    val isActive: Boolean = true
+    val isActive: Boolean = true,
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val orders: MutableList<OrderEntity> = mutableListOf()
+
 ) {
     // Конструктор без параметров для JPA
     constructor() : this(null, "", "", "", true)
