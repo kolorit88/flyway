@@ -40,8 +40,11 @@ class OrderServiceImpl(
     }
 
     override fun createOrder(userId: Long, dishIds: List<Long>): Order {
+
         val user = userRepositoryPort.findById(userId)
-            ?: throw BusinessException.UserNotFound(userId)
+        if (user == null) {
+            throw BusinessException.OrderValidationError("User with id $userId not found")
+        }
 
         if (dishIds.isEmpty()) {
             throw BusinessException.OrderValidationError("Order must contain at least one dish")
@@ -49,7 +52,7 @@ class OrderServiceImpl(
 
         val dishes = dishIds.map { dishId ->
             dishRepositoryPort.findById(dishId)
-                ?: throw BusinessException.DishNotFound(dishId)
+                ?: throw BusinessException.OrderValidationError("Dish with id $dishId not found")
         }
 
         val order = Order(

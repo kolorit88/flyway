@@ -26,10 +26,4 @@ sealed class BusinessException(message: String) : RuntimeException(message) {
         BusinessException("Cannot change order status from $currentStatus to $newStatus")
     class OrderAlreadyProcessed(orderId: Long) : BusinessException("Order with id $orderId has already been processed")
     class EmptyOrderError() : BusinessException("Order must contain at least one dish")
-
-    // Общие исключения
-    class InvalidIdError(id: Long, entityName: String) : BusinessException("Invalid $entityName id: $id")
-    class DuplicateEntityError(entityName: String, field: String, value: String) :
-        BusinessException("$entityName with $field '$value' already exists")
-    class DatabaseOperationError(message: String) : BusinessException("Database operation failed: $message")
 }

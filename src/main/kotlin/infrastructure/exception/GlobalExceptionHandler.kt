@@ -165,13 +165,26 @@ class GlobalExceptionHandler {
             .body(errorResponse)
     }
 
+    // Обработка OrderValidationError - возвращаем 400 BAD REQUEST
+    @ExceptionHandler(BusinessException.OrderValidationError::class)
+    fun handleOrderValidationError(ex: BusinessException.OrderValidationError): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = "Validation Error",
+            message = ex.message ?: "Invalid order data"
+        )
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(errorResponse)
+    }
+
     // Обработка общих валидационных исключений
     @ExceptionHandler(
         BusinessException.InvalidUserData::class,
         BusinessException.DishValidationError::class,
         BusinessException.UserValidationError::class,
-        BusinessException.RestaurantValidationError::class,
-        BusinessException.OrderValidationError::class
+        BusinessException.RestaurantValidationError::class
     )
     fun handleBusinessValidationError(ex: BusinessException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
