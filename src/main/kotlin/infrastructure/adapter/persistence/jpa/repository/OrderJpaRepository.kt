@@ -5,6 +5,8 @@ import infrastructure.adapter.persistence.jpa.entity.OrderEntity
 import org.example.example.domain.model.OrderStatus
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -21,4 +23,7 @@ interface OrderJpaRepository : JpaRepository<OrderEntity, Long> {
 
     @EntityGraph(attributePaths = ["dishes", "user"])
     fun findAllByUserIdAndStatus(userId: Long, status: OrderStatus): List<OrderEntity>
+
+    @Query("SELECT COUNT(o) > 0 FROM OrderEntity o JOIN o.dishes d WHERE d.id = :dishId")
+    fun existsOrderWithDish(@Param("dishId") dishId: Long): Boolean
 }

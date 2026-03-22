@@ -1,13 +1,13 @@
 package org.example.example.infrastructure.adapter.persistence.jpa.adapter
 
-import infrastructure.adapter.persistence.jpa.entity.OrderStatus
+
 import infrastructure.adapter.persistence.jpa.repository.DishJpaRepository
 import infrastructure.adapter.persistence.jpa.repository.OrderJpaRepository
 import infrastructure.adapter.persistence.jpa.repository.UserJpaRepository
 import org.example.example.domain.model.Order
-import org.example.example.domain.model.OrderStatus as DomainOrderStatus
 import org.example.example.domain.port.OrderRepositoryPort
 import infrastructure.adapter.persistence.jpa.entity.OrderEntity
+import org.example.example.domain.model.OrderStatus
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 
@@ -71,20 +71,15 @@ class OrderJpaAdapter(
         return orderJpaRepository.findAllByUserId(userId).map { it.toDomain() }
     }
 
-    override fun findAllByStatus(status: DomainOrderStatus): List<Order> {
+    override fun findAllByStatus(status: OrderStatus): List<Order> {
         return orderJpaRepository.findAllByStatus(status).map { it.toDomain() }
     }
 
-    override fun findAllByUserIdAndStatus(userId: Long, status: DomainOrderStatus): List<Order> {
+    override fun findAllByUserIdAndStatus(userId: Long, status: OrderStatus): List<Order> {
         return orderJpaRepository.findAllByUserIdAndStatus(userId, status).map { it.toDomain() }
     }
 
-    private fun convertToEntityStatus(domainStatus: DomainOrderStatus): OrderStatus {
-        return when (domainStatus) {
-            DomainOrderStatus.PENDING -> OrderStatus.PENDING
-            DomainOrderStatus.CONFIRMED -> OrderStatus.CONFIRMED
-            DomainOrderStatus.DELIVERED -> OrderStatus.DELIVERED
-            DomainOrderStatus.CANCELLED -> OrderStatus.CANCELLED
-        }
+    override fun existsOrderWithDish(dishId: Long): Boolean {
+        return orderJpaRepository.existsOrderWithDish(dishId)
     }
 }
