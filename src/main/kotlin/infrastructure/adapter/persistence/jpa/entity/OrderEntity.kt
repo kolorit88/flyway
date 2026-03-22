@@ -22,7 +22,7 @@ data class OrderEntity(
     @JoinColumn(name = "user_id", nullable = false)
     val user: UserEntity,
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinTable(
         name = "order_dishes",
         joinColumns = [JoinColumn(name = "order_id")],

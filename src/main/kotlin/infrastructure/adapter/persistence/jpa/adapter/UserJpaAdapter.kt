@@ -4,13 +4,16 @@ import domain.model.User
 import domain.port.UserRepositoryPort
 import infrastructure.adapter.persistence.jpa.repository.UserJpaRepository
 import infrastructure.adapter.persistence.jpa.entity.UserEntity
+import infrastructure.adapter.persistence.jpa.repository.OrderJpaRepository
+import jakarta.transaction.Transactional
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 
 @Repository
 @Profile("db")
 class UserJpaAdapter(
-    private val userJpaRepository: UserJpaRepository
+    private val userJpaRepository: UserJpaRepository,
+    private val orderJpaRepository: OrderJpaRepository
 ) : UserRepositoryPort {
 
     override fun findAll(): List<User> {
@@ -36,10 +39,20 @@ class UserJpaAdapter(
         return savedEntity.toDomain()
     }
 
+    @Transactional
     override fun deleteById(id: Long): Boolean {
         return if (userJpaRepository.existsById(id)) {
-            userJpaRepository.deleteById(id)
-            true
+            val userOrders = orderJpaRepository.findAllByUserId(id)
+
+            if (userOrders.isEmpty()) {
+                userJpaRepository.deleteById(id)
+                true
+            } else {
+                val userEntity = userJpaRepository.findById(id).get()
+                val inactiveUser = userEntity.copy(isActive = false)
+                userJpaRepository.save(inactiveUser)
+                true
+            }
         } else {
             false
         }

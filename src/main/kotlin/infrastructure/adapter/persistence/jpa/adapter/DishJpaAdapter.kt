@@ -65,13 +65,13 @@ class DishJpaAdapter(
     override fun deleteById(id: Long): Boolean {
         return if (dishJpaRepository.existsById(id)) {
             val ordersWithDish = orderJpaRepository.findAllByDishId(id)
-            ordersWithDish.forEach { order ->
-                order.dishes.removeIf { it.id == id }
-                orderJpaRepository.save(order)
-            }
 
-            dishJpaRepository.deleteById(id)
-            true
+            if (ordersWithDish.isEmpty()) {
+                dishJpaRepository.deleteById(id)
+                true
+            } else {
+                false
+            }
         } else {
             false
         }
