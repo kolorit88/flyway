@@ -16,6 +16,26 @@ data class Order(
     }
 
     fun updateStatus(newStatus: OrderStatus): Order {
+        // Валидация переходов статусов
+        when (status) {
+            OrderStatus.PENDING -> {
+                if (newStatus != OrderStatus.CONFIRMED && newStatus != OrderStatus.CANCELLED) {
+                    throw IllegalStateException("Cannot change order status from ${status.name} to ${newStatus.name}")
+                }
+            }
+            OrderStatus.CONFIRMED -> {
+                if (newStatus != OrderStatus.DELIVERED && newStatus != OrderStatus.CANCELLED) {
+                    throw IllegalStateException("Cannot change order status from ${status.name} to ${newStatus.name}")
+                }
+            }
+            OrderStatus.DELIVERED -> {
+                throw IllegalStateException("Cannot change status of already delivered order")
+            }
+            OrderStatus.CANCELLED -> {
+                throw IllegalStateException("Cannot change status of cancelled order")
+            }
+        }
+
         return this.copy(status = newStatus)
     }
 
