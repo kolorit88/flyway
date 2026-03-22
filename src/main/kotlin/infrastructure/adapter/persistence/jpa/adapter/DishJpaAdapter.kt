@@ -4,7 +4,9 @@ import domain.model.Dish
 import domain.port.DishRepositoryPort
 import infrastructure.adapter.persistence.jpa.repository.DishJpaRepository
 import infrastructure.adapter.persistence.jpa.entity.DishEntity
+import infrastructure.adapter.persistence.jpa.repository.OrderJpaRepository
 import infrastructure.adapter.persistence.jpa.repository.RestaurantJpaRepository
+import org.example.example.domain.model.Order
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 
@@ -12,7 +14,8 @@ import org.springframework.stereotype.Repository
 @Profile("db")
 class DishJpaAdapter(
     private val dishJpaRepository: DishJpaRepository,
-    private val restaurantJpaRepository: RestaurantJpaRepository
+    private val restaurantJpaRepository: RestaurantJpaRepository,
+    private val orderJpaRepository: OrderJpaRepository
 ) : DishRepositoryPort {
 
     override fun findAll(): List<Dish> {
@@ -60,5 +63,9 @@ class DishJpaAdapter(
 
     override fun findAllByRestaurantId(restaurantId: Long): List<Dish> {
         return dishJpaRepository.findAllByRestaurantId(restaurantId).map { it.toDomain() }
+    }
+
+    override fun findOrdersContainingDish(dishId: Long): List<Order> {
+        return orderJpaRepository.findAllByDishId(dishId).map { it.toDomain() }
     }
 }

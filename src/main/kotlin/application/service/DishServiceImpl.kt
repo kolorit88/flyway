@@ -6,6 +6,7 @@ import domain.service.DishService
 import org.springframework.stereotype.Service
 import shared.exception.BusinessException
 import domain.port.RestaurantRepositoryPort
+import jakarta.transaction.Transactional
 
 @Service
 class DishServiceImpl(
@@ -44,10 +45,12 @@ class DishServiceImpl(
     override fun createDishInRestaurant(restaurantId: Long, dish: Dish): Dish {
         val restaurant = restaurantRepositoryPort.findById(restaurantId)
             ?: throw BusinessException.RestaurantNotFound(restaurantId)
+
         val existingDish = dishRepositoryPort.findByName(dish.name)
         if (existingDish != null) {
             throw BusinessException.DishNameAlreadyExists(dish.name)
         }
+
         val dishWithRestaurant = dish.copy(restaurantId = restaurantId)
 
         return try {
@@ -61,7 +64,6 @@ class DishServiceImpl(
         val existingDish = dishRepositoryPort.findById(dish.id!!)
             ?: throw BusinessException.DishNotFound(dish.id!!)
 
-        // Проверяем уникальность имени при обновлении
         val dishWithSameName = dishRepositoryPort.findByName(dish.name)
         if (dishWithSameName != null && dishWithSameName.id != dish.id) {
             throw BusinessException.DishNameAlreadyExists(dish.name)
@@ -70,9 +72,12 @@ class DishServiceImpl(
         return dishRepositoryPort.update(dish)
     }
 
+    @Transactional
     override fun deleteDishById(dishId: Long): Boolean {
         val dishExists = dishRepositoryPort.findById(dishId)
             ?: throw BusinessException.DishNotFound(dishId)
+
+        val ordersWithDish = dishRepositoryPort.findOrdersContainingDish(dishId)
 
         return dishRepositoryPort.deleteById(dishId)
     }

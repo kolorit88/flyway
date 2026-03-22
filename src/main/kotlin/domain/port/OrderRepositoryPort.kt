@@ -8,7 +8,7 @@ interface OrderRepositoryPort : BaseRepositoryPort<Order> {
     fun findAllByUserId(userId: Long): List<Order>
     fun findAllByStatus(status: OrderStatus): List<Order>
     fun findAllByUserIdAndStatus(userId: Long, status: OrderStatus): List<Order>
-
+    fun findAllByDishId(dishId: Long): List<Order>
     fun existsOrderWithDish(dishId: Long): Boolean
 }
 

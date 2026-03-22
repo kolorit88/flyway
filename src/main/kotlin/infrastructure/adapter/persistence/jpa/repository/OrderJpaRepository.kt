@@ -24,6 +24,7 @@ interface OrderJpaRepository : JpaRepository<OrderEntity, Long> {
     @EntityGraph(attributePaths = ["dishes", "user"])
     fun findAllByUserIdAndStatus(userId: Long, status: OrderStatus): List<OrderEntity>
 
-    @Query("SELECT COUNT(o) > 0 FROM OrderEntity o JOIN o.dishes d WHERE d.id = :dishId")
-    fun existsOrderWithDish(@Param("dishId") dishId: Long): Boolean
+    @Query("SELECT DISTINCT o FROM OrderEntity o JOIN o.dishes d WHERE d.id = :dishId")
+    @EntityGraph(attributePaths = ["dishes", "user"])
+    fun findAllByDishId(@Param("dishId") dishId: Long): List<OrderEntity>
 }

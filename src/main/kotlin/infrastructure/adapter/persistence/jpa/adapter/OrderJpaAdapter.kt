@@ -79,7 +79,11 @@ class OrderJpaAdapter(
         return orderJpaRepository.findAllByUserIdAndStatus(userId, status).map { it.toDomain() }
     }
 
+    override fun findAllByDishId(dishId: Long): List<Order> {
+        return orderJpaRepository.findAllByDishId(dishId).map { it.toDomain() }
+    }
+
     override fun existsOrderWithDish(dishId: Long): Boolean {
-        return orderJpaRepository.existsOrderWithDish(dishId)
+        TODO("Not yet implemented")
     }
 }

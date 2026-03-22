@@ -1,6 +1,7 @@
 package infrastructure.adapter.persistence.mock
 import domain.model.Dish
 import domain.port.DishRepositoryPort
+import org.example.example.domain.model.Order
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 
@@ -12,6 +13,10 @@ class DishMockRepositoryAdapter : BaseMockRepositoryAdapter<Dish>(), DishReposit
     }
 
     override fun findAllByRestaurantId(restaurantId: Long): List<Dish> {
+        TODO("Not yet implemented")
+    }
+
+    override fun findOrdersContainingDish(dishId: Long): List<Order> {
         TODO("Not yet implemented")
     }
 }
