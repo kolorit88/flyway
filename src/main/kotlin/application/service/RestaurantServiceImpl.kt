@@ -1,4 +1,4 @@
-package org.example.example.application.service
+package application.service
 import domain.model.Dish
 import domain.model.Restaurant
 import domain.port.DishRepositoryPort

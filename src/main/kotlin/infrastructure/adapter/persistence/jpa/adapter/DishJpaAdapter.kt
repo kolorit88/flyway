@@ -1,16 +1,18 @@
-package infrastructure.adapter.persistence.jpa
+package infrastructure.adapter.persistence.jpa.adapter
 
 import domain.model.Dish
 import domain.port.DishRepositoryPort
 import infrastructure.adapter.persistence.jpa.repository.DishJpaRepository
-import org.example.example.infrastructure.adapter.persistence.jpa.entity.DishEntity
+import infrastructure.adapter.persistence.jpa.entity.DishEntity
+import infrastructure.adapter.persistence.jpa.repository.RestaurantJpaRepository
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 
 @Repository
 @Profile("db")
 class DishJpaAdapter(
-    private val dishJpaRepository: DishJpaRepository
+    private val dishJpaRepository: DishJpaRepository,
+    private val restaurantJpaRepository: RestaurantJpaRepository
 ) : DishRepositoryPort {
 
     override fun findAll(): List<Dish> {
@@ -22,7 +24,13 @@ class DishJpaAdapter(
     }
 
     override fun create(entity: Dish): Dish {
-        val dishEntity = DishEntity.fromDomain(entity)
+        val restaurantEntity = entity.restaurantId?.let {
+            restaurantJpaRepository.findById(it).orElseThrow {
+                IllegalArgumentException("Restaurant with id ${entity.restaurantId} not found")
+            }
+        } ?: throw IllegalArgumentException("Restaurant ID is required for dish creation")
+
+        val dishEntity = DishEntity.fromDomain(entity, restaurantEntity)
         val savedEntity = dishJpaRepository.save(dishEntity)
         return savedEntity.toDomain()
     }
@@ -31,7 +39,8 @@ class DishJpaAdapter(
         val existingEntity = dishJpaRepository.findById(entity.id!!)
             .orElseThrow { IllegalArgumentException("Dish with id ${entity.id} not found") }
 
-        val updatedEntity = DishEntity.fromDomain(entity)
+        val restaurantEntity = existingEntity.restaurant
+        val updatedEntity = DishEntity.fromDomain(entity, restaurantEntity)
         val savedEntity = dishJpaRepository.save(updatedEntity)
         return savedEntity.toDomain()
     }
@@ -47,5 +56,9 @@ class DishJpaAdapter(
 
     override fun findByName(name: String): Dish? {
         return dishJpaRepository.findByName(name)?.toDomain()
+    }
+
+    override fun findAllByRestaurantId(restaurantId: Long): List<Dish> {
+        return dishJpaRepository.findAllByRestaurantId(restaurantId).map { it.toDomain() }
     }
 }

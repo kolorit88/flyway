@@ -7,5 +7,6 @@ data class DishResponse(
     val name: String,
     val description: String,
     val price: BigDecimal,
-    val isAvailable: Boolean
+    val isAvailable: Boolean,
+    val restaurantId: Long?
 )

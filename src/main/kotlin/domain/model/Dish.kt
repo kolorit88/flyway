@@ -8,7 +8,8 @@ data class Dish(
     var name: String,
     var description: String,
     val price: BigDecimal,
-    val isAvailable: Boolean
+    val isAvailable: Boolean,
+    val restaurantId: Long?
 ): IHaveID<Dish>
 {
     init

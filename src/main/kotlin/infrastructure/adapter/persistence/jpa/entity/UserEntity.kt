@@ -1,4 +1,4 @@
-package org.example.example.infrastructure.adapter.persistence.jpa.entity
+package infrastructure.adapter.persistence.jpa.entity
 import domain.model.User
 import jakarta.persistence.*
 

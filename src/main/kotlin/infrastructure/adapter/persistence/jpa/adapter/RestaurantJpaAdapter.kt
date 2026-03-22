@@ -4,7 +4,7 @@ package org.example.example.infrastructure.adapter.persistence.jpa.adapter
 import domain.model.Restaurant
 import domain.port.RestaurantRepositoryPort
 import infrastructure.adapter.persistence.jpa.repository.RestaurantJpaRepository
-import org.example.example.infrastructure.adapter.persistence.jpa.entity.RestaurantEntity
+import infrastructure.adapter.persistence.jpa.entity.RestaurantEntity
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 

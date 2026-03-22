@@ -1,4 +1,4 @@
-package org.example.example.infrastructure.adapter.persistence.jpa.entity
+package infrastructure.adapter.persistence.jpa.entity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import org.example.example.domain.model.Order

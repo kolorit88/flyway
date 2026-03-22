@@ -5,10 +5,12 @@ import domain.port.DishRepositoryPort
 import domain.service.DishService
 import org.springframework.stereotype.Service
 import shared.exception.BusinessException
+import domain.port.RestaurantRepositoryPort
 
 @Service
 class DishServiceImpl(
-    private val dishRepositoryPort: DishRepositoryPort
+    private val dishRepositoryPort: DishRepositoryPort,
+    private val restaurantRepositoryPort: RestaurantRepositoryPort
 ) : DishService {
 
     override fun getDishById(dishId: Long): Dish {
@@ -18,20 +20,15 @@ class DishServiceImpl(
 
     override fun getAllDishes(namePart: String?): List<Dish> {
         val allDishes = dishRepositoryPort.findAll()
-
-        return if (!namePart.isNullOrBlank()) {
-            allDishes.filter { it.name.contains(namePart, ignoreCase = true) }
-        } else {
+        return if (namePart.isNullOrBlank()) {
             allDishes
+        } else {
+            allDishes.filter { it.name.contains(namePart, ignoreCase = true) }
         }
     }
 
-    override fun findByName(name: String): Dish? {
-        return dishRepositoryPort.findByName(name)
-    }
-
     override fun createOrGetDish(dish: Dish): Pair<Dish, Boolean> {
-        val existingDish = findByName(dish.name)
+        val existingDish = dishRepositoryPort.findByName(dish.name)
 
         if (existingDish != null) {
             return Pair(existingDish, false)
@@ -44,12 +41,28 @@ class DishServiceImpl(
         }
     }
 
+    override fun createDishInRestaurant(restaurantId: Long, dish: Dish): Dish {
+        val restaurant = restaurantRepositoryPort.findById(restaurantId)
+            ?: throw BusinessException.RestaurantNotFound(restaurantId)
+        val existingDish = dishRepositoryPort.findByName(dish.name)
+        if (existingDish != null) {
+            throw BusinessException.DishNameAlreadyExists(dish.name)
+        }
+        val dishWithRestaurant = dish.copy(restaurantId = restaurantId)
+
+        return try {
+            dishRepositoryPort.create(dishWithRestaurant)
+        } catch (e: IllegalArgumentException) {
+            throw BusinessException.DishValidationError(e.message ?: "Invalid dish data")
+        }
+    }
+
     override fun updateDish(dish: Dish): Dish {
         val existingDish = dishRepositoryPort.findById(dish.id!!)
             ?: throw BusinessException.DishNotFound(dish.id!!)
 
-        // Проверяем, не существует ли другое блюдо с таким же именем
-        val dishWithSameName = findByName(dish.name)
+        // Проверяем уникальность имени при обновлении
+        val dishWithSameName = dishRepositoryPort.findByName(dish.name)
         if (dishWithSameName != null && dishWithSameName.id != dish.id) {
             throw BusinessException.DishNameAlreadyExists(dish.name)
         }

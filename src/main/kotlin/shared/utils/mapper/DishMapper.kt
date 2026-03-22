@@ -5,7 +5,6 @@ import org.example.example.infrastructure.dto.requests.dish.DishData
 import org.example.example.infrastructure.dto.requests.dish.DishUpdateRequest
 import org.example.example.infrastructure.dto.response.DishResponse
 import org.springframework.stereotype.Component
-
 @Component
 class DishMapper {
 
@@ -15,7 +14,8 @@ class DishMapper {
             name = dish.name,
             description = dish.description,
             price = dish.price,
-            isAvailable = dish.isAvailable
+            isAvailable = dish.isAvailable,
+            restaurantId = dish.restaurantId
         )
     }
 
@@ -25,7 +25,8 @@ class DishMapper {
             name = dishData.name,
             description = dishData.description,
             price = dishData.price,
-            isAvailable = dishData.isAvailable
+            isAvailable = dishData.isAvailable,
+            restaurantId = dishData.restaurantId
         )
     }
 
@@ -35,7 +36,8 @@ class DishMapper {
             name = createRequest.name,
             description = createRequest.description,
             price = createRequest.price,
-            isAvailable = createRequest.isAvailable
+            isAvailable = createRequest.isAvailable,
+            restaurantId = createRequest.restaurantId
         )
     }
 
@@ -45,7 +47,8 @@ class DishMapper {
             name = updateRequest.name,
             description = updateRequest.description,
             price = updateRequest.price,
-            isAvailable = updateRequest.isAvailable
+            isAvailable = updateRequest.isAvailable,
+            restaurantId = updateRequest.restaurantId
         )
     }
 }

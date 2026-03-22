@@ -7,7 +7,7 @@ import infrastructure.adapter.persistence.jpa.repository.UserJpaRepository
 import org.example.example.domain.model.Order
 import org.example.example.domain.model.OrderStatus as DomainOrderStatus
 import org.example.example.domain.port.OrderRepositoryPort
-import org.example.example.infrastructure.adapter.persistence.jpa.entity.OrderEntity
+import infrastructure.adapter.persistence.jpa.entity.OrderEntity
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 

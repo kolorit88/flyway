@@ -1,4 +1,4 @@
-package org.example.example.infrastructure.adapter.persistence.jpa.entity
+package infrastructure.adapter.persistence.jpa.entity
 
 import domain.model.Dish
 import jakarta.persistence.*
@@ -21,29 +21,37 @@ data class DishEntity(
     val price: BigDecimal,
 
     @Column(name = "is_available", nullable = false)
-    val isAvailable: Boolean = true
-) {
-    constructor() : this(null, "", "", BigDecimal.ZERO, true)
+    val isAvailable: Boolean = true,
 
-    // очень не хотел писать отдельный маппер
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    val restaurant: RestaurantEntity
+) {
+    constructor() : this(
+        null, "", "", BigDecimal.ZERO, true,
+        RestaurantEntity()
+    )
+
     fun toDomain(): Dish {
         return Dish(
             id = id,
             name = name,
             description = description,
             price = price,
-            isAvailable = isAvailable
+            isAvailable = isAvailable,
+            restaurantId = restaurant.id
         )
     }
 
     companion object {
-        fun fromDomain(dish: Dish): DishEntity {
+        fun fromDomain(dish: Dish, restaurantEntity: RestaurantEntity): DishEntity {
             return DishEntity(
                 id = dish.id,
                 name = dish.name,
                 description = dish.description,
                 price = dish.price,
-                isAvailable = dish.isAvailable
+                isAvailable = dish.isAvailable,
+                restaurant = restaurantEntity
             )
         }
     }

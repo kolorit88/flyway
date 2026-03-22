@@ -1,6 +1,6 @@
 package infrastructure.adapter.persistence.jpa.repository
 
-import org.example.example.infrastructure.adapter.persistence.jpa.entity.UserEntity
+import infrastructure.adapter.persistence.jpa.entity.UserEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

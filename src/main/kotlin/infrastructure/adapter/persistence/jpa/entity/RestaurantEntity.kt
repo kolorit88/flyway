@@ -1,4 +1,4 @@
-package org.example.example.infrastructure.adapter.persistence.jpa.entity
+package infrastructure.adapter.persistence.jpa.entity
 import domain.model.Restaurant
 import jakarta.persistence.*
 
@@ -8,7 +8,7 @@ import jakarta.persistence.*
 data class RestaurantEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Long?,
 
     @Column(nullable = false, unique = true)
     val name: String,

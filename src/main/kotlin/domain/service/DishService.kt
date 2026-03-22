@@ -3,9 +3,9 @@ import domain.model.Dish
 
 interface DishService {
     fun getDishById(dishId: Long): Dish
-    fun getAllDishes(namePart: String? = null): List<Dish>
+    fun getAllDishes(namePart: String?): List<Dish>
     fun createOrGetDish(dish: Dish): Pair<Dish, Boolean>
-    fun findByName(name: String): Dish?
+    fun createDishInRestaurant(restaurantId: Long, dish: Dish): Dish  // Новый метод
     fun updateDish(dish: Dish): Dish
     fun deleteDishById(dishId: Long): Boolean
 }
