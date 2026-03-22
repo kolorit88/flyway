@@ -48,10 +48,7 @@ class UserJpaAdapter(
                 userJpaRepository.deleteById(id)
                 true
             } else {
-                val userEntity = userJpaRepository.findById(id).get()
-                val inactiveUser = userEntity.copy(isActive = false)
-                userJpaRepository.save(inactiveUser)
-                true
+                throw IllegalStateException("Cannot delete user with id $id because they have existing orders")
             }
         } else {
             false
